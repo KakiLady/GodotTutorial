@@ -1,0 +1,186 @@
+[gd_scene load_steps=26 format=3 uid="uid://b0hjo6rkqq76"]
+
+[ext_resource type="Script" path="res://scripts/portal/portal_model.gd" id="1_1r70d"]
+[ext_resource type="Script" path="res://scripts/portal/portal.gd" id="1_c7h57"]
+[ext_resource type="Script" path="res://scripts/portal/portal_input.gd" id="2_t6vjc"]
+[ext_resource type="Script" path="res://scripts/portal/detector.gd" id="3_bdhlb"]
+[ext_resource type="Script" path="res://scripts/portal/portal_view.gd" id="4_qu1mj"]
+[ext_resource type="Script" path="res://scripts/portal/portal_state_machine.gd" id="5_7hjfr"]
+[ext_resource type="Script" path="res://scripts/portal/states/portal_idle_state.gd" id="5_pxo7t"]
+[ext_resource type="Script" path="res://scripts/portal/states/portal_transporting_state.gd" id="6_avfgr"]
+[ext_resource type="Texture2D" uid="uid://drm6t27rsd486" path="res://assets/sprites/portal/portal_idle_state.png" id="9_pyf5t"]
+[ext_resource type="Texture2D" uid="uid://idn0607qiqbx" path="res://assets/sprites/portal/portal_transporting_state.png" id="10_ueqo3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qac5x"]
+radius = 12.0416
+
+[sub_resource type="Animation" id="Animation_ckkpd"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"PortalTransportingState"]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_0adjp"]
+_data = {
+"RESET": SubResource("Animation_ckkpd")
+}
+
+[sub_resource type="Animation" id="Animation_kx2mw"]
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"PortalIdleState"]
+}
+
+[sub_resource type="Animation" id="Animation_m0yf3"]
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:animation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"PortalTransportingState"]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_moqnx"]
+_data = {
+"PortalIdleState": SubResource("Animation_kx2mw"),
+"PortalTransportingState": SubResource("Animation_m0yf3")
+}
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hr6ny"]
+atlas = ExtResource("9_pyf5t")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_25xv4"]
+atlas = ExtResource("9_pyf5t")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ckfpv"]
+atlas = ExtResource("9_pyf5t")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ewoji"]
+atlas = ExtResource("9_pyf5t")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w1a0j"]
+atlas = ExtResource("10_ueqo3")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vrffd"]
+atlas = ExtResource("10_ueqo3")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ea87q"]
+atlas = ExtResource("10_ueqo3")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hs6ml"]
+atlas = ExtResource("10_ueqo3")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fs70m"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hr6ny")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_25xv4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ckfpv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ewoji")
+}],
+"loop": true,
+"name": &"PortalIdleState",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w1a0j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vrffd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ea87q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hs6ml")
+}],
+"loop": true,
+"name": &"PortalTransportingState",
+"speed": 5.0
+}]
+
+[node name="Portal" type="Node2D"]
+script = ExtResource("1_c7h57")
+
+[node name="Input" type="Node2D" parent="."]
+script = ExtResource("2_t6vjc")
+
+[node name="Detector" type="Area2D" parent="Input"]
+collision_layer = 512
+collision_mask = 1024
+script = ExtResource("3_bdhlb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Input/Detector"]
+shape = SubResource("CircleShape2D_qac5x")
+
+[node name="Model" type="Node2D" parent="."]
+script = ExtResource("1_1r70d")
+
+[node name="StateMachine" type="Node" parent="Model"]
+script = ExtResource("5_7hjfr")
+
+[node name="PortalIdleState" type="Node" parent="Model/StateMachine"]
+script = ExtResource("5_pxo7t")
+
+[node name="PortalTransportingState" type="Node" parent="Model/StateMachine"]
+script = ExtResource("6_avfgr")
+
+[node name="View" type="Node2D" parent="."]
+script = ExtResource("4_qu1mj")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="View"]
+libraries = {
+"": SubResource("AnimationLibrary_0adjp"),
+"PortalAnimations": SubResource("AnimationLibrary_moqnx")
+}
+autoplay = "PortalAnimations/PortalIdleState"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="View"]
+sprite_frames = SubResource("SpriteFrames_fs70m")
+animation = &"PortalTransportingState"
+autoplay = "PortalIdleState"
+
+[connection signal="area_entered" from="Input/Detector" to="Input/Detector" method="_on_area_entered"]
+[connection signal="area_exited" from="Input/Detector" to="Input/Detector" method="_on_area_exited"]
+[connection signal="body_entered" from="Input/Detector" to="Input/Detector" method="_on_body_entered"]
+[connection signal="body_exited" from="Input/Detector" to="Input/Detector" method="_on_body_exited"]
